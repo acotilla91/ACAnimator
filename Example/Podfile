@@ -1,0 +1,11 @@
+use_frameworks!
+
+target 'ACAnimator_Example' do
+  pod 'ACAnimator', :path => '../'
+
+  target 'ACAnimator_Tests' do
+    inherit! :search_paths
+
+    
+  end
+end
