@@ -8,7 +8,18 @@ import UIKit
 public typealias ACAnimatorAnimation = (_ fraction: Double, _ elapsed: Double, _ duration: Double) -> Void
 public typealias ACAnimatorCompletion = (_ finished: Bool) -> Void
 
-enum ACAnimatorEaseFunction {
+public struct ACAnimatorOptions: OptionSet {
+    public let rawValue: Int
+    
+    public init(rawValue: Int) {
+        self.rawValue = rawValue
+    }
+    
+    public static let `repeat` = ACAnimatorOptions(rawValue: 1 << 0) // repeat animation indefinitely
+    public static let autoreverse = ACAnimatorOptions(rawValue: 1 << 1) // if repeat, run animation back and forth
+}
+
+public enum ACAnimatorEaseFunction {
     /// No easing, no acceleration
     case linear
     
@@ -251,9 +262,12 @@ public class ACAnimator: NSObject {
     private(set) var elapsed: CFTimeInterval = 0.0
     private(set) var startTime: CFTimeInterval = 0.0
     
+    private var options: ACAnimatorOptions = []
+    private var reversed: Bool = false
+    
     private var displayLink: CADisplayLink?
     
-    private var animation: ACAnimatorAnimation
+    private var animation: ACAnimatorAnimation!
     private var completion: ACAnimatorCompletion?
     
     var isRunning: Bool {
@@ -264,9 +278,20 @@ public class ACAnimator: NSObject {
         stop()
     }
     
-    init(duration: CFTimeInterval, easeFunction: ACAnimatorEaseFunction, animation: @escaping ACAnimatorAnimation, completion: ACAnimatorCompletion? = nil) {
+    public init(duration: CFTimeInterval, easeFunction: ACAnimatorEaseFunction, animation: @escaping ACAnimatorAnimation, completion: ACAnimatorCompletion? = nil) {
+        super.init()
+        prepare(duration: duration, easeFunction: easeFunction, options: [], animation: animation, completion: completion)
+    }
+    
+    public init(duration: CFTimeInterval, easeFunction: ACAnimatorEaseFunction, options: ACAnimatorOptions, animation: @escaping ACAnimatorAnimation, completion: ACAnimatorCompletion? = nil) {
+        super.init()
+        prepare(duration: duration, easeFunction: easeFunction, options: options, animation: animation, completion: completion)
+    }
+    
+    private func prepare(duration: CFTimeInterval, easeFunction: ACAnimatorEaseFunction, options: ACAnimatorOptions, animation: @escaping ACAnimatorAnimation, completion: ACAnimatorCompletion? = nil) {
         self.easeFunction = easeFunction
         self.duration = duration
+        self.options = options
         self.animation = animation
         self.completion = completion
     }
@@ -293,16 +318,16 @@ public class ACAnimator: NSObject {
         elapsed = CACurrentMediaTime() - startTime
         let fraction = elapsed / duration
         if fraction >= 1.0 {
-            animation(1.0, elapsed, duration)
-            animationDidFinish(forcibly: false)
+            animation(reversed ? 0.0 : 1.0, elapsed, duration)
+            animationDidFinish()
         }
         else {
-            let easedFraction = easeFunction.apply(to: fraction)
+            let easedFraction = easeFunction.apply(to: reversed ? 1.0 - fraction : fraction)
             animation(easedFraction, elapsed, duration)
         }
     }
     
-    private func animationDidFinish(forcibly: Bool) {
+    private func animationDidFinish(forcibly: Bool = false) {
         guard displayLink != nil else { return }
         
         displayLink?.invalidate()
@@ -311,6 +336,14 @@ public class ACAnimator: NSObject {
         elapsed = 0.0
         startTime = 0.0
         
-        completion?(!forcibly)
+        if !forcibly && options.contains(.repeat) {
+            if options.contains(.autoreverse) {
+                reversed = !reversed
+            }
+            start()
+        }
+        else {
+            completion?(!forcibly)
+        }
     }
 }
