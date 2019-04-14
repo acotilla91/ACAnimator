@@ -46,7 +46,7 @@ class ViewController: UIViewController {
         
         setupMovementSection()
         setupTypewriterSection()
-        setupTransformationsSection()
+        setupTransformationSection()
         
         scrollView.contentSize = CGSize(width: view.frame.width, height: scrollView.contentReach + 30)
     }
@@ -94,9 +94,29 @@ class ViewController: UIViewController {
         animator.start()
     }
     
-    private func setupTransformationsSection() {
-        addHeaderLabel(with: "Transformations")
+    private func setupTransformationSection() {
+        addHeaderLabel(with: "Transformation")
 
+        let size = CGSize(width: 250, height: 160)
+        let origin = CGPoint(x: scrollView.frame.width/2 - size.width/2, y: scrollView.contentReach + 30)
+        let box = UIView(frame: CGRect(origin: origin, size: size))
+        scrollView.addSubview(box)
+        
+        let shapeLayer = CAShapeLayer()
+        shapeLayer.fillColor = UIColor.blue.cgColor
+        box.layer.addSublayer(shapeLayer)
+        
+        // Determine the target value
+        let targetCurvature = 1.0
+        
+        let animator = ACAnimator(duration: 3.0, easeFunction: .elasticIn(magnitude: nil), options: [.repeat, .autoreverse], animation: { (fraction, _, _) in
+            // Calculate the proper value for the current "frame"
+            let newValue = targetCurvature * fraction
+            
+            // Apply the new value
+            shapeLayer.path = self.bottomCurvedPath(for: box.frame.size, curvature: CGFloat(newValue)).cgPath
+        })
+        animator.start()
     }
     
     private func addHeaderLabel(with text: String) {
@@ -104,6 +124,37 @@ class ViewController: UIViewController {
         label.font = UIFont.boldSystemFont(ofSize: 40)
         scrollView.addSubview(label)
         label.text = text
+    }
+    
+    private func bottomCurvedPath(for size: CGSize, curvature: CGFloat) -> UIBezierPath {
+        let bounds = CGRect(x: 0, y: 0, width: size.width, height: size.height)
+        let w = bounds.size.width
+        let h = bounds.size.height
+        
+        let path = UIBezierPath()
+        path.move(to: CGPoint(x: 0, y: 0))
+        path.addLine(to: CGPoint(x: w, y: 0))
+        path.addLine(to: CGPoint(x: w, y: h - (h * curvature)))
+        
+        // Draw quadratic curve.
+        // Calculate the control point based on the 3 points that the curve must pass through.
+        // Based on: https://stackoverflow.com/a/38753266/1792699
+        func controlPoint(_ leftPoint: CGPoint, _ rightPoint: CGPoint, _ middlePoint: CGPoint) -> CGPoint {
+            let x = 2 * middlePoint.x - leftPoint.x / 2 - rightPoint.x / 2
+            let y = 2 * middlePoint.y - leftPoint.y / 2 - rightPoint.y / 2
+            return CGPoint(x: x, y: y)
+        }
+        
+        let leftPoint = CGPoint(x: 0, y: h - (h * curvature))
+        let middlePoint = CGPoint(x: w / 2, y: h)
+        let rightPoint = CGPoint(x: w, y: h - (h * curvature))
+        
+        path.addQuadCurve(to: leftPoint, controlPoint: controlPoint(leftPoint, rightPoint, middlePoint))
+        
+        path.addLine(to: CGPoint(x: 0, y: 0))
+        path.close()
+        
+        return path
     }
 }
 
