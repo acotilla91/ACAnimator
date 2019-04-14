@@ -40,14 +40,17 @@ class ViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        
+        perform(#selector(begin), with: nil, afterDelay: 1.0)
+    }
+    
+    @objc func begin() {
         scrollView = UIScrollView(frame: CGRect(origin: .zero, size: UIScreen.main.bounds.size))
         view.addSubview(scrollView)
-        
+
         setupMovementSection()
         setupTypewriterSection()
         setupTransformationSection()
-        
+
         scrollView.contentSize = CGSize(width: view.frame.width, height: scrollView.contentReach + 30)
     }
     
@@ -84,7 +87,7 @@ class ViewController: UIViewController {
         label.sizeToFit()
         label.text = ""
         
-        let animator = ACAnimator(duration: 20, easeFunction: .linear, options: [.repeat, .autoreverse], animation: { (fraction, _, _) in
+        let animator = ACAnimator(duration: 15, easeFunction: .linear, options: [.repeat, .autoreverse], animation: { (fraction, _, _) in
             // Calculate the proper value for the current "frame"
             let newValue = paragraph.prefix(Int(Double(paragraph.count) * fraction))
             
