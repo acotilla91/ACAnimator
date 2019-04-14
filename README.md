@@ -1,7 +1,6 @@
 
 # ACAnimator
 
-[![CI Status](https://img.shields.io/travis/acotilla91/ACAnimator.svg?style=flat)](https://travis-ci.org/acotilla91/ACAnimator)
 [![Version](https://img.shields.io/cocoapods/v/ACAnimator.svg?style=flat)](https://cocoapods.org/pods/ACAnimator)
 [![License](https://img.shields.io/cocoapods/l/ACAnimator.svg?style=flat)](https://cocoapods.org/pods/ACAnimator)
 [![Platform](https://img.shields.io/cocoapods/p/ACAnimator.svg?style=flat)](https://cocoapods.org/pods/ACAnimator)
