@@ -17,6 +17,23 @@ extension UIScrollView {
     }
 }
 
+// From https://stackoverflow.com/a/10681299/1792699
+class TopAlignedLabel: UILabel {
+    override func drawText(in rect:CGRect) {
+        guard let labelText = text else {  return super.drawText(in: rect) }
+        
+        let attributedText = NSAttributedString(string: labelText, attributes: [NSAttributedString.Key.font: font!])
+        var newRect = rect
+        newRect.size.height = attributedText.boundingRect(with: rect.size, options: .usesLineFragmentOrigin, context: nil).size.height
+        
+        if numberOfLines != 0 {
+            newRect.size.height = min(newRect.size.height, CGFloat(numberOfLines) * font.lineHeight)
+        }
+        
+        super.drawText(in: newRect)
+    }
+}
+
 class ViewController: UIViewController {
 
     var scrollView: UIScrollView!
@@ -58,6 +75,23 @@ class ViewController: UIViewController {
     private func setupTypewriterSection() {
         addHeaderLabel(with: "Typewriter")
 
+        let paragraph = "ACAnimator lets you animate almost anything on iOS or tvOS (including non-animatable properties). Can also be used to \"animate\" logical changes not just visual (e.g. fade in/out audio). It supports over 30 different easing functions and it uses CADisplayLink for optimal performance."
+        
+        let label = TopAlignedLabel(frame: CGRect(x: 20, y: scrollView.contentReach + 30, width: scrollView.frame.width - 20, height: 0))
+        scrollView.addSubview(label)
+        label.numberOfLines = 0
+        label.text = paragraph
+        label.sizeToFit()
+        label.text = ""
+        
+        let animator = ACAnimator(duration: 20, easeFunction: .linear, options: [.repeat, .autoreverse], animation: { (fraction, _, _) in
+            // Calculate the proper value for the current "frame"
+            let newValue = paragraph.prefix(Int(Double(paragraph.count) * fraction))
+            
+            // Apply the new value
+            label.text = String(newValue)
+        })
+        animator.start()
     }
     
     private func setupTransformationsSection() {
