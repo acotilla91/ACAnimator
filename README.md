@@ -10,6 +10,8 @@ ACAnimator lets you animate almost anything on iOS or tvOS (including non-animat
 
 ## Example
 
+![Demo](https://github.com/acotilla91/ACAnimator/blob/master/ACAnimator-demo.gif)
+
 To run the example project, clone the repo, and run `pod install` from the Example directory first.
 
 ## Usage
