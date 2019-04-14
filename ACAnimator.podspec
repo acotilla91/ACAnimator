@@ -1,6 +1,6 @@
 Pod::Spec.new do |s|
     s.name             = 'ACAnimator'
-    s.version          = '1.0.0'
+    s.version          = '1.0.1'
     s.summary          = 'Animate anything on iOS or tvOS'
     
     s.description      = <<-DESC
