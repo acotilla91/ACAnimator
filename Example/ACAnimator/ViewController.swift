@@ -120,7 +120,8 @@ class ViewController: UIViewController {
     }
     
     private func addHeaderLabel(with text: String) {
-        let label = UILabel(frame: CGRect(x: 20, y: scrollView.contentReach + 60, width: 300, height: 40))
+        let label = UILabel(frame: CGRect(x: 0, y: scrollView.contentReach + 60, width: scrollView.frame.width, height: 40))
+        label.textAlignment = .center
         label.font = UIFont.boldSystemFont(ofSize: 40)
         scrollView.addSubview(label)
         label.text = text
