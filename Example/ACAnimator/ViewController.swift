@@ -8,17 +8,68 @@
 
 import UIKit
 
+import ACAnimator
+
+extension UIScrollView {
+    var contentReach: CGFloat {
+        let elements = subviews.sorted { $0.frame.maxY < $1.frame.maxY }
+        return elements.last?.frame.maxY ?? 0
+    }
+}
+
 class ViewController: UIViewController {
 
+    var scrollView: UIScrollView!
+    
     override func viewDidLoad() {
         super.viewDidLoad()
-        // Do any additional setup after loading the view, typically from a nib.
+        
+        scrollView = UIScrollView(frame: CGRect(origin: .zero, size: UIScreen.main.bounds.size))
+        view.addSubview(scrollView)
+        
+        setupMovementSection()
+        setupTypewriterSection()
+        setupTransformationsSection()
+        
+        scrollView.contentSize = CGSize(width: view.frame.width, height: scrollView.contentReach + 30)
     }
+    
+    private func setupMovementSection() {
+        addHeaderLabel(with: "Movement")
+        
+        let box = UIView(frame: CGRect(x: 0, y: scrollView.contentReach + 30, width: 40, height: 40))
+        box.backgroundColor = .red
+        scrollView.addSubview(box)
+        
+        // Determine the target value
+        let targetX = UIScreen.main.bounds.width - box.frame.width
+        
+        // Prepare and run the animation
+        let animator = ACAnimator(duration: 3.0, easeFunction: .bounceOut, options: [.repeat, .autoreverse], animation: { (fraction, _, _) in
+            // Calculate the proper value for the current "frame"
+            let newValue = targetX * CGFloat(fraction)
 
-    override func didReceiveMemoryWarning() {
-        super.didReceiveMemoryWarning()
-        // Dispose of any resources that can be recreated.
+            // Apply the new value
+            box.transform = CGAffineTransform(translationX: newValue, y: 0)
+        })
+        animator.start()
     }
+    
+    private func setupTypewriterSection() {
+        addHeaderLabel(with: "Typewriter")
 
+    }
+    
+    private func setupTransformationsSection() {
+        addHeaderLabel(with: "Transformations")
+
+    }
+    
+    private func addHeaderLabel(with text: String) {
+        let label = UILabel(frame: CGRect(x: 20, y: scrollView.contentReach + 60, width: 300, height: 40))
+        label.font = UIFont.boldSystemFont(ofSize: 40)
+        scrollView.addSubview(label)
+        label.text = text
+    }
 }
 
