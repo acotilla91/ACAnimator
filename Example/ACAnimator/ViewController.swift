@@ -12,7 +12,7 @@ import ACAnimator
 
 extension UIScrollView {
     var contentReach: CGFloat {
-        let elements = subviews.sorted { $0.frame.maxY < $1.frame.maxY }
+        let elements = subviews.sorted { $0.frame.maxY < $1.frame.maxY }.filter { !($0 is UIImageView) }
         return elements.last?.frame.maxY ?? 0
     }
 }
