@@ -1,0 +1,16 @@
+PODS:
+  - ACAnimator (0.1.0)
+
+DEPENDENCIES:
+  - ACAnimator (from `../`)
+
+EXTERNAL SOURCES:
+  ACAnimator:
+    :path: "../"
+
+SPEC CHECKSUMS:
+  ACAnimator: d2b76646a10fb54764d6ff7267184da1dde5285a
+
+PODFILE CHECKSUM: d294eafb8e627f3996202b7b8c92629009f48d65
+
+COCOAPODS: 1.5.3
