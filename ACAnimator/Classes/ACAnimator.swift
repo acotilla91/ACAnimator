@@ -5,8 +5,8 @@
 
 import UIKit
 
-typealias ACAnimatorAnimation = (_ fraction: Double, _ elapsed: Double, _ duration: Double) -> Void
-typealias ACAnimatorCompletion = (_ finished: Bool) -> Void
+public typealias ACAnimatorAnimation = (_ fraction: Double, _ elapsed: Double, _ duration: Double) -> Void
+public typealias ACAnimatorCompletion = (_ finished: Bool) -> Void
 
 enum ACAnimatorEaseFunction {
     /// No easing, no acceleration
@@ -244,7 +244,7 @@ enum ACAnimatorEaseFunction {
     }
 }
 
-class ACAnimator: NSObject {
+public class ACAnimator: NSObject {
     
     private(set) var easeFunction: ACAnimatorEaseFunction = .linear
     private(set) var duration: CFTimeInterval = 0.0
@@ -255,6 +255,10 @@ class ACAnimator: NSObject {
     
     private var animation: ACAnimatorAnimation
     private var completion: ACAnimatorCompletion?
+    
+    var isRunning: Bool {
+        return displayLink != nil
+    }
     
     deinit {
         stop()
@@ -267,8 +271,11 @@ class ACAnimator: NSObject {
         self.completion = completion
     }
     
-    func start() {
-        stop()
+    public func start() {
+        guard !isRunning else {
+            print("ACAnimator - Error: Can't start animation because is already running.")
+            return
+        }
         
         startTime = CACurrentMediaTime()
         
@@ -278,7 +285,7 @@ class ACAnimator: NSObject {
         self.displayLink = displayLink
     }
     
-    func stop() {
+    public func stop() {
         animationDidFinish(forcibly: true)
     }
     
