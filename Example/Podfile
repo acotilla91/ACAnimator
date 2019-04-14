@@ -1,11 +1,6 @@
 use_frameworks!
+platform :ios, '10.0'
 
 target 'ACAnimator_Example' do
   pod 'ACAnimator', :path => '../'
-
-  target 'ACAnimator_Tests' do
-    inherit! :search_paths
-
-    
-  end
 end

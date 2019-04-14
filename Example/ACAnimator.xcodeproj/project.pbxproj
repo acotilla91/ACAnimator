@@ -195,7 +195,7 @@
 			inputFileListPaths = (
 			);
 			inputPaths = (
-				"${SRCROOT}/Pods/Target Support Files/Pods-ACAnimator_Example/Pods-ACAnimator_Example-frameworks.sh",
+				"${PODS_ROOT}/Target Support Files/Pods-ACAnimator_Example/Pods-ACAnimator_Example-frameworks.sh",
 				"${BUILT_PRODUCTS_DIR}/ACAnimator/ACAnimator.framework",
 			);
 			name = "[CP] Embed Pods Frameworks";
@@ -206,7 +206,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-ACAnimator_Example/Pods-ACAnimator_Example-frameworks.sh\"\n";
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-ACAnimator_Example/Pods-ACAnimator_Example-frameworks.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
 		F983E04013F8F09AE3F82044 /* [CP] Check Pods Manifest.lock */ = {
@@ -376,6 +376,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				INFOPLIST_FILE = ACAnimator/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				MODULE_NAME = ExampleApp;
 				PRODUCT_BUNDLE_IDENTIFIER = "org.cocoapods.demo.$(PRODUCT_NAME:rfc1034identifier)";
@@ -390,6 +391,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				INFOPLIST_FILE = ACAnimator/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				MODULE_NAME = ExampleApp;
 				PRODUCT_BUNDLE_IDENTIFIER = "org.cocoapods.demo.$(PRODUCT_NAME:rfc1034identifier)";
